@@ -1,0 +1,21 @@
+# For Insertion frequency Caculation
+
+# QC and merge R1,R2
+for i in *_R1_001.fastq.gz; do n=${i%%_L001_R1_001.fastq.gz}; fastp -i $i -I ${i%%R1_001.fastq.gz}R2_001.fastq.gz -m --merged_out merge_fastqRes/${n}_merged.fastq.gz -j merge_fastqRes/${n}.fastp.json -h merge_fastqRes/${n}.fastp.html -w 30; done
+# mapping merged files to reference genome
+for i in 458*_merged.fastq.gz; do n=${i%%fastq.gz}; echo $i; bowtie2 -x ../458insertion -U $i -S ${n}sam -p 20; echo "mapping finished!"; samtools view -bS ${n}sam > ${n}bam; samtools sort ${n}bam > ${n}sorted.bam; samtools index ${n}sorted.bam; echo "get bam!"; done
+for i in 600*_merged.fastq.gz; do n=${i%%fastq.gz}; echo $i; bowtie2 -x ../600insertion -U $i -S ${n}sam -p 20; echo "mapping finished!"; samtools view -bS ${n}sam > ${n}bam; samtools sort ${n}bam > ${n}sorted.bam; samtools index ${n}sorted.bam; echo "get bam!"; done
+for i in 800*_merged.fastq.gz; do n=${i%%fastq.gz}; echo $i; bowtie2 -x ../800insertion -U $i -S ${n}sam -p 20; echo "mapping finished!"; samtools view -bS ${n}sam > ${n}bam; samtools sort ${n}bam > ${n}sorted.bam; samtools index ${n}sorted.bam; echo "get bam!"; done
+for i in 1000*_merged.fastq.gz; do n=${i%%fastq.gz}; echo $i; bowtie2 -x ../1000insertion -U $i -S ${n}sam -p 20; echo "mapping finished!"; samtools view -bS ${n}sam > ${n}bam; samtools sort ${n}bam > ${n}sorted.bam; samtools index ${n}sorted.bam; echo "get bam!"; done
+# calculate coverage
+for i in 1000*bam; do samtools coverage -r HZ-Covaris_edit:1520-1579 -q 25 -H $i; done
+for i in 800*bam; do echo $i;samtools coverage -r HZ-Covaris_edit:1353-1412 -q 25 -H $i; done
+for i in 600*bam; do echo $i;samtools coverage -r HZ-Covaris_edit:1272-1341 -q 25 -H $i; done
+for i in 458*bam; do echo $i;samtools coverage -r HZ-Covaris_edit:1187-1256 -q 25 -H $i; done
+for i in *.bam; do echo $i;samtools coverage -r HZ-Covaris_edit:300-800 -q 25 -H $i; done
+ls *c*.sorted.bam
+for i in *c*.sorted.bam; do echo $i;samtools coverage -r HZ-Covaris_edit:300-800 -q 25 -H $i; done
+for i in 458*c*.sorted.bam; do echo $i;samtools coverage -r HZ-Covaris_edit:1187-1256 -q 25 -H $i; done
+for i in 600*c*.sorted.bam; do echo $i;samtools coverage -r HZ-Covaris_edit:1272-1341 -q 25 -H $i; done
+for i in 800*c*.sorted.bam; do echo $i;samtools coverage -r HZ-Covaris_edit:1353-1412 -q 25 -H $i; done
+for i in 1000*c*.sorted.bam; do echo $i;samtools coverage -r HZ-Covaris_edit:1520-1579 -q 25 -H $i; done
