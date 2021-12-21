@@ -1,2 +1,2 @@
-# Grand-editing
-### Codes for Grand-editing project
+# GRAND-editing
+### Codes for GRAND-editing project
